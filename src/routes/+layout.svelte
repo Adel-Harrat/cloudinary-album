@@ -1,8 +1,11 @@
 <script>
+	// @ts-nocheck
+
 	import '../app.css';
 	import { BookHeart, Upload } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { CldUploadWidget } from 'svelte-cloudinary';
+	import { invalidate } from '$app/navigation';
 </script>
 
 <!-- nav bar -->
@@ -14,7 +17,15 @@
 		</a>
 
 		<div class="ml-auto">
-			<CldUploadWidget uploadPreset="unsigned_preset_1" let:open let:isLoading>
+			<CldUploadWidget
+				uploadPreset="auto_tagging_captioning"
+				onUpload={() => {
+					invalidate('app:home-page-image-list');
+				}}
+				let:open
+				let:isLoading
+				signatureEndpoint="/api/image/signature"
+			>
 				<Button variant="secondary" on:click={open} disabled={isLoading}>
 					<Upload class="mr-2 size-4" />
 					Upload
@@ -25,7 +36,5 @@
 </div>
 
 <div class="container my-8 pt-16">
-	<!-- container -->
-
-	<slot></slot>
+	<slot />
 </div>
